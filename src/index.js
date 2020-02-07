@@ -62,6 +62,7 @@ class Game extends React.Component {
             }],
             stepNumber: 0,
             xIsNext: true,
+            movesIsAsc: true,
         }
     }
 
@@ -87,7 +88,18 @@ class Game extends React.Component {
         });
     }
 
+    handleSortToggle() {
+        this.setState({
+            movesIsAsc: !this.state.movesIsAsc,
+        });
+    }
+
     jumpTo(step) {
+        if (step < 0){
+            step = 0;
+        } else if (step > this.state.stepNumber) {
+            step = this.state.stepNumber;
+        }
         this.setState({
             stepNumber: step,
             xIsNext: (step%2) === 0,
@@ -99,6 +111,7 @@ class Game extends React.Component {
         const stepNumber = this.state.stepNumber;
         const current = history[stepNumber];
         const winner = calculateWinner(current.squares);
+        const movesIsAsc = this.state.movesIsAsc;
 
         const moves = history.map((step, move) => {
             const col = this.state.history[move].col;
@@ -118,6 +131,10 @@ class Game extends React.Component {
             )
         });
 
+        const sort = (<button
+            className="sort-button"
+            onClick={() => {this.handleSortToggle()}}>Sort moves (Currently {movesIsAsc ? "Ascending" : "Descending"})</button>);
+
         let status;
         if (winner) {
             status = 'Winner: ' + winner;
@@ -134,7 +151,8 @@ class Game extends React.Component {
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <ol>{moves}</ol>
+                    <div>{sort}</div>
+                    <ol>{movesIsAsc ? moves : moves.reverse()}</ol>
                 </div>
             </div>
         );
