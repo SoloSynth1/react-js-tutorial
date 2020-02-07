@@ -53,3 +53,7 @@ ol, ul {
     float: left;
     font-weight: bold;
 }
+
+.square.highlight {
+    background: #ddd
+}
